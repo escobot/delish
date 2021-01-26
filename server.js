@@ -26,8 +26,8 @@ app.use(express.static('public'));
 let listener = app.listen(process.env.PORT, function () {
     console.log('Delish is running on port ' + listener.address().port);
 
-    // fetch reddit posts every hour
-    (new CronJob('0 * * * *', function () {
+    // fetch reddit posts every 15 minutes
+    (new CronJob('*/15 * * * *', function () {
         const randomSubreddit = Math.floor(Math.random() * Math.floor(subreddits.length));
         request('https://old.reddit.com/r/' + subreddits[randomSubreddit], function (err, res, body) {
             if (err) {
@@ -38,7 +38,7 @@ let listener = app.listen(process.env.PORT, function () {
                     const post = $(this)[0].children[0];
 
                     // remove the [I ate], [Homemade], etc from the title
-                    let sanitizedPost = post.data.replace(/ *\[[^\]]*]/, '');
+                    let sanitizedPost = post.data.replace(/ *\[[^\]]*] /, '');
 
                     // make sure the post is not on the "to tweet" list and has not been tweeted.
                     if (!redditPosts.some(e => e.status === sanitizedPost) && !postedTweets.some(e => e.slice(0,5) === sanitizedPost.slice(0,5))) {
