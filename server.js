@@ -56,8 +56,8 @@ let listener = app.listen(process.env.PORT, function () {
         });
     })).start();
 
-    // tweet every hour
-    (new CronJob('0 * * * *', function () {
+    // tweet every 3 hours
+    (new CronJob('0 */3 * * *', function () {
         if (redditPosts.length > 0) {
             const redditPost = redditPosts.pop();
             let tweet = redditPost.status + ' #food #foodie ' + redditPost.image_url;
